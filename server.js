@@ -133,6 +133,14 @@ var SampleApp = function()
         self.routes['/api/acores/siteAcore/filtreGuichet/:codeAcore/:id'] = function (req, res)
         {
 
+            res.setHeader('Access-Control-Allow-Origin', '*');
+
+            // Request methods you wish to allow
+            res.setHeader('Access-Control-Allow-Methods', 'GET');
+
+            // Request headers you wish to allow
+            res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
 // verification que la requete contient bien les paramatres attendus
             if((req.params.id.length > 0 && req.params.id > 0)  && (req.params.codeAcore.length > 0)) {
                 paramId = req.params.id;
@@ -147,6 +155,14 @@ var SampleApp = function()
 
         self.routes['/api/acores/siteAcore/horaires/:codeAcore/:id']= function (req, res)
         {
+
+            res.setHeader('Access-Control-Allow-Origin', '*');
+
+            // Request methods you wish to allow
+            res.setHeader('Access-Control-Allow-Methods', 'GET');
+
+            // Request headers you wish to allow
+            res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
 
 // verification que la requete contient bien les paramatres attendus
             if((req.params.id.length > 0 && req.params.id > 0)  && (req.params.codeAcore.length > 0)) {
