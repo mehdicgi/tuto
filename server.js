@@ -141,8 +141,8 @@ var SampleApp = function()
                      res.end();
                     
                 }else{
-                    res.send('your ip '+forwardedIpsStr+' is not allowed'); 
-                    res.send(req.headers.toString()); 
+                   // res.send('your ip '+forwardedIpsStr+' is not allowed'); 
+                    res.send('headers '+req.headers); 
                   res.end();
                   
                 }
