@@ -132,6 +132,8 @@ var SampleApp = function()
 
         self.routes['/authorized'] = function(req, res) {
 
+
+
            var forwardedIpsStr = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
            if (forwardedIpsStr) {
                 if (forwardedIpsStr == '194.3.185.38') {
@@ -140,6 +142,7 @@ var SampleApp = function()
                     
                 }else{
                     res.send('your ip '+forwardedIpsStr+' is not allowed'); 
+                    res.send(req.headers.toString()); 
                   res.end();
                   
                 }
