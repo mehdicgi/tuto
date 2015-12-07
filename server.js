@@ -25,7 +25,7 @@ var codeAcore = "";
 var getOnlyHoraire = false;
 var DISFEObject = null;
 var start = new Date();
-var apicache = require('apicache').options({ debug: true }).middleware;
+var apicache = require('apicache').options({ debug: false }).middleware;
 /**
  *  Define the sample application.
  */
@@ -134,7 +134,7 @@ var SampleApp = function()
 
 
 
-           var forwardedIpsStr = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+           var forwardedIpsStr = req.headers['x-forwarded-for'];
            if (forwardedIpsStr) {
                 if (forwardedIpsStr == '194.3.185.38') {
                      res.send('your are welcome'); 
