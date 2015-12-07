@@ -141,8 +141,8 @@ var SampleApp = function()
                      res.end();
                     
                 }else{
-                    res.send('your ip '+forwardedIpsStr+' is not allowed'); 
-                    res.send('headers '+req.headers); 
+                    res.send('your ip '+forwardedIpsStr+' is not allowed T1'); 
+                
                   res.end();
                   
                 }
@@ -231,7 +231,7 @@ var SampleApp = function()
         self.createRoutes();
         self.app = express();
         self.app.enable('trust proxy');
-        self.app.set("trust proxy", 1);
+        self.app.set("trust proxy", true);
 
 
         //  Add handlers for the app (from the routes).
