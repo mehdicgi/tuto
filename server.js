@@ -130,7 +130,7 @@ var SampleApp = function()
         };
 
 
-        self.routes['/authorized'] = function(req, res) {
+        self.routes['/authorized2'] = function(req, res) {
 
 
 
