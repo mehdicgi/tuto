@@ -137,11 +137,11 @@ var SampleApp = function()
            var forwardedIpsStr = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
            if (forwardedIpsStr) {
                 if (forwardedIpsStr == '194.3.185.38') {
-                     res.send('your are welcome'); 
+                     res.send('your are welcome T2'); 
                      res.end();
                     
                 }else{
-                    res.send('your ip '+forwardedIpsStr+' is not allowed T1'); 
+                    res.send('your ip '+forwardedIpsStr+' is not allowed T2'); 
                 
                   res.end();
                   
