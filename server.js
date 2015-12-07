@@ -231,7 +231,8 @@ var SampleApp = function()
         self.createRoutes();
         self.app = express();
         self.app.enable('trust proxy');
-        app.enable('trust proxy');
+        self.app.set("trust proxy", 1);
+
 
         //  Add handlers for the app (from the routes).
         for (var r in self.routes)
