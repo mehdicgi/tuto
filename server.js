@@ -134,7 +134,7 @@ var SampleApp = function()
 
 
 
-           var forwardedIpsStr = req.headers['x-forwarded-for'];
+           var forwardedIpsStr = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
            if (forwardedIpsStr) {
                 if (forwardedIpsStr == '194.3.185.38') {
                      res.send('your are welcome'); 
@@ -230,6 +230,7 @@ var SampleApp = function()
     self.initializeServer = function() {
         self.createRoutes();
         self.app = express();
+        self.app.enable('trust proxy');
 
         //  Add handlers for the app (from the routes).
         for (var r in self.routes)
