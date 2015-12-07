@@ -134,15 +134,15 @@ var SampleApp = function()
 
 
 
-           var forwardedIpsStr = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+           var forwardedIpsStr = req.headers['x-forwarded-for'];
            if (forwardedIpsStr) {
                 if (forwardedIpsStr == '194.3.185.38') {
                      res.send('your are welcome'); 
                      res.end();
                     
                 }else{
-                   // res.send('your ip '+forwardedIpsStr+' is not allowed'); 
-                    res.send('headers '+req.headers); 
+                    res.send('your ip '+forwardedIpsStr+' is not allowed'); 
+                   // res.send('headers '+req.headers); 
                   res.end();
                   
                 }
