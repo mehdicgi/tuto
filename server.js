@@ -130,14 +130,14 @@ var SampleApp = function()
         };
 
 
-        self.routes['/authorized3'] = function(req, res) {
+        self.routes['/authorized'] = function(req, res) {
 
 
 
            var forwardedIpsStr = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
            if (forwardedIpsStr) {
                 if (forwardedIpsStr == '194.3.185.38') {
-                     res.send('your are welcome T2'); 
+                     res.send('your are welcome'); 
                      res.end();
                     
                 }else{
