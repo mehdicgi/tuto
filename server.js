@@ -50,7 +50,7 @@ var SampleApp = function()
         self.ipaddress = process.env.OPENSHIFT_NODEJS_IP ||
                          process.env.OPENSHIFT_INTERNAL_IP;
         self.port      = process.env.OPENSHIFT_NODEJS_PORT   ||
-                         process.env.OPENSHIFT_INTERNAL_PORT || 8091;
+                         process.env.OPENSHIFT_INTERNAL_PORT || 9000;
 
         if (typeof self.ipaddress === "undefined") {
             //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
@@ -130,7 +130,7 @@ var SampleApp = function()
         };
 
 
-        self.routes['/authorized'] = function(req, res) {
+      /*  self.routes['/authorized'] = function(req, res) {
 
 
 
@@ -149,9 +149,7 @@ var SampleApp = function()
            } 
            
             
-        };
-
-
+        };*/
         self.routes['/api/acores/siteAcore/filtreGuichet/:codeAcore/:id'] = function (req, res)
         {
 
@@ -375,9 +373,11 @@ function setDataAcoreV1(res,data){
         }
         //res.write('{"codeRegate": "'+obj.bureaux.codeSite+'"}');
         
-    }catch(e){
-        res.write("erreur traitement Json Acore v1 :"+e);
-        console.info("erreur traitement Json Acore v1 : "+e);
+    }
+	catch(error)
+	{
+        res.write("erreur traitement Json Acore v1 :"+error);
+        console.info("erreur traitement Json Acore v1 : "+error);
         res.end();
     }
 
@@ -395,7 +395,8 @@ function setDataAcoreV2(res,data){
 
         var obj = JSON.parse(data);
 
-        if(!getOnlyHoraire){
+        if(!getOnlyHoraire)
+		{
         
 
         DISFEObject.codeAcores = codeAcore;
@@ -434,10 +435,12 @@ function setDataAcoreV2(res,data){
         DISFEObject.horaires = getHoraires(obj.bureaux[codeAcore].horaires,codeAcore,DISFEObject.codeRegate);
 
 
-    }catch(e){
+    }
+	catch(error)
+	{
 
-        res.write("erreur traitement Json Acore v2 :"+e);
-        console.info("erreur traitement Json Acore v2 : "+e);
+        res.write("erreur traitement Json Acore v2 :"+error);
+        console.info("erreur traitement Json Acore v2 : "+error);
         res.end();
     }
 
@@ -531,11 +534,14 @@ console.info("try getting horaires");
 
             
 
-        }else{
+        }
+		else
+		{
 
 
             oneHoraire.codTypService = null;
-            for (i = 1; i <= 7; i++) {
+            for (i = 1; i <= 7; i++) 
+			{
                     oneHoraire['plageHor'+i] = null;
             }
             oneHoraire.hldCour = null;
@@ -557,10 +563,10 @@ console.info("try getting horaires");
 
      return tabHoraireFormatted;
 
-    }catch(e){
-
+    }catch(e)
+	{
         res.write("erreur traitement horaire Acore v2 :"+e);
-        console.info("erreur traitement horaire Acore v2 : "+e);
+        console.info("erreur traitement horaire Acore v2 A TESTER : "+e);
         res.end();
     }
 }
@@ -587,6 +593,7 @@ console.info("tentative de connexion sur : "+hostApi+pathApi+'\n\n');
 // parametre de connexion
 var options = {
       host: hostApi,
+      host: hostApi,
       path: pathApi,
       encoding: 'UTF-8',
       method: 'GET',
@@ -594,7 +601,7 @@ var options = {
                 'Content-Type': 'application/json',
                 'Cache-Control':'max-age=60'
       },
-     // agent: agent,
+   //  agent: agent,
       port:80
 };
 
@@ -624,21 +631,27 @@ var reqGet = http.request(options, function(result) {
                 nbTentativeConnexion++;
                 performResponse(res,(phase),stringBuffer);
 
-            }catch(e){
+            }catch(e)
+			{
                     res.write("erreur en phase d'authentification V1 :"+e);
+					
                     console.info("erreur en phase d'authentification V1 : "+e);
                     res.end();
                     
             }
 
         // reception resultat de la requete sans erreur 
-        }else if(result.statusCode == "200"){
+        }
+		else if(result.statusCode == "200")
+		{
 
                 // verification de la presence d'un statusCode 401 dans la reponse Json 
-                try{
-
-                    if(JSON.parse(stringBuffer).hasOwnProperty('statusCode') == true){
-                        if(JSON.parse(stringBuffer).statusCode == "401"){
+                try
+				{
+                    if(JSON.parse(stringBuffer).hasOwnProperty('statusCode') == true)
+					{
+                        if(JSON.parse(stringBuffer).statusCode == "401")
+						{
                             // recuperation Token generation clef de session ( Acore V2 )
                             var obj = JSON.parse(stringBuffer);
                             apiKey = md5(Keysession+obj.token);
@@ -646,10 +659,14 @@ var reqGet = http.request(options, function(result) {
                             nbTentativeConnexion++;
                             performResponse(res,(phase),stringBuffer);
                         }
-                     }else{
+                     }
+					 else
+					 {
                         performResponse(res,(phase+1),stringBuffer);    
                      }
-                }catch(error){
+                }
+				catch(error)
+				{
 
                     res.write("erreur en phase d'authentification V2"+error);
                     console.info("erreur en phase d'authentification V2"+error);
@@ -658,16 +675,26 @@ var reqGet = http.request(options, function(result) {
                 }
             
         }else{
+			
+			try {}
+			catch(error)
+			{
                 // Autre status
-                res.write("erreur status code non attendu"+result.statusCode);
-                console.info("erreur status code non attendu"+result.statusCode);
+                res.write("erreur status code non attendu "+error);
+                console.info("erreur status code non attendu "+error);
                 res.end();
+			}
         }
 
     }else{
-        res.write("pas de reponse valide AcoreV1 ou AcoreV2 dans le temps imparti ( codeAcore ou id invalide ? ) ");
+		try{}
+		catch(error)
+		{
+        res.write("pas de reponse valide AcoreV1 ou AcoreV2 dans le temps imparti ( codeAcore ou id invalide ? ) "+error);
+		 console.info("pas de reponse valide AcoreV1 ou AcoreV2 dans le temps imparti ( codeAcore ou id invalide ? )"+error);
         res.end();
         nbTentativeConnexion = 0;
+		}
     }
 
    
