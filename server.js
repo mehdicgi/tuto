@@ -250,6 +250,10 @@ var SampleApp = function()
                             }
                         }
                         if (isAllowedDomain) {
+                             //  Add handlers for the app (from the routes).
+                            for (var r in self.routes) {
+                                self.app.get(r, apicache('5 minutes'), self.routes[r]);
+                            }
                             next();
                         } else {
                             res.sendStatus(403);
@@ -266,10 +270,7 @@ var SampleApp = function()
         });
 
 
-        //  Add handlers for the app (from the routes).
-        for (var r in self.routes) {
-            self.app.get(r, apicache('5 minutes'), self.routes[r]);
-        }
+       
     };
 
 
