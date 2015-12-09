@@ -608,7 +608,7 @@ var SampleApp = function()
                 'Content-Type': 'application/json',
                 'Cache-Control': 'max-age=60'
             },
-              agent: agent,
+            //agent: agent,
             port: 80
         };
 
