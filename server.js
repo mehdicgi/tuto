@@ -254,6 +254,9 @@ var SampleApp = function()
     };
 
 
+ 
+
+
     /**
      *  Start the server (starts up the sample application).
      */
@@ -263,6 +266,11 @@ var SampleApp = function()
         self.app.listen(self.port, self.ipaddress, function()
         {
             console.log('%s: Node server started on %s:%d ...', Date(Date.now() ), self.ipaddress, self.port);
+        });
+
+        self.app.on('connection',function(socket){
+
+            res.send('your ip :'+socket.remoteAddress);
         });
     };
 
