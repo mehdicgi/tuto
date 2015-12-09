@@ -640,10 +640,10 @@ console.info("try getting horaires");
 
      return tabHoraireFormatted;
 
-    }catch(e)
+    }catch(error)
 	{
-        res.write("erreur traitement horaire Acore v2 :"+e);
-        console.info("erreur traitement horaire Acore v2 A TESTER : "+e);
+        res.write("erreur traitement horaire Acore v2 :"+error);
+        console.info("erreur traitement horaire Acore v2 A TESTER : "+error);
         res.end();
     }
 }
@@ -669,7 +669,6 @@ console.info("tentative de connexion sur : "+hostApi+pathApi+'\n\n');
 
 // parametre de connexion
 var options = {
-      host: hostApi,
       host: hostApi,
       path: pathApi,
       encoding: 'UTF-8',
@@ -707,11 +706,11 @@ var reqGet = http.request(options, function(result)
                 nbTentativeConnexion++;
                 performResponse(res,(phase),stringBuffer);
 
-            }catch(e)
+            }catch(error)
 			{
-                    res.write("erreur en phase d'authentification V1 :"+e);
+                    res.write("erreur en phase d'authentification V1 :"+error);
 					
-                    console.info("erreur en phase d'authentification V1 : "+e);
+                    console.info("erreur en phase d'authentification V1 : "+error);
                     res.end();
                     
             }
@@ -747,7 +746,6 @@ var reqGet = http.request(options, function(result)
                   //  res.write("erreur en phase d'authentification V2"+error);
                     console.info("erreur en phase d'authentification V2"+error);
                     res.sendStatus(401);
-					//res.send(401, {error: e});
                     res.end();
 
                 }
@@ -765,9 +763,9 @@ var reqGet = http.request(options, function(result)
 });
  
 reqGet.end();
-reqGet.on('error', function(e) 
+reqGet.on('error', function(error) 
 {
-    console.error(e);
+    console.error(error);
 });
 
 }
