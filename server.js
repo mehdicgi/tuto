@@ -268,7 +268,7 @@ var SampleApp = function()
         });
 
         for (var r in self.routes) {
-            self.app.get(r, apicache('5 minutes'), self.routes[r]);
+            self.app.get(r, apicache('2 minutes'), self.routes[r]);
         }
        
     };
