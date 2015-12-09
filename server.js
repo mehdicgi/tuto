@@ -273,7 +273,7 @@ var SampleApp = function()
                     if(isAllowedDomain){
                         next();
                     }else{
-                        res.sendStatus(403)  
+                        res.sendStatus(403);
                         res.end();
                     }
                 }catch(Err){
@@ -513,9 +513,11 @@ function setDataAcoreV2(res,data){
     }
 	catch(error)
 	{
-        res.write("erreur traitement Json Acore v2 :"+error);
+       // res.write("erreur traitement Json Acore v2 :"+error);
         console.info("erreur traitement Json Acore v2 : "+error);
-		res.send(401, {error: e});
+
+		
+        res.sendStatus(401);
         res.end();
     }
 
@@ -676,7 +678,7 @@ var options = {
                 'Content-Type': 'application/json',
                 'Cache-Control':'max-age=60'
       },
-    // agent: agent,
+   //  agent: agent,
       port:80
 };
 
@@ -742,30 +744,19 @@ var reqGet = http.request(options, function(result)
 				catch(error)
 				{
 
-                    res.write("erreur en phase d'authentification V2"+error);
+                  //  res.write("erreur en phase d'authentification V2"+error);
                     console.info("erreur en phase d'authentification V2"+error);
-					res.send(401, {error: e});
+                    res.sendStatus(401);
+					//res.send(401, {error: e});
                     res.end();
 
                 }
             
-        }else{
-			
-			try {}
-			catch(error)
-			{
-                // Autre status
-				 res.send(401, {error: e});
-			}
         }
-
     }else{
-		try{}
-		catch(error)
-		{
-        res.send(401, {error: e});
+		
         nbTentativeConnexion = 0;
-		}
+	
     }
 
    
