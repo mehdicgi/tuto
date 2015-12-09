@@ -23,6 +23,7 @@ var paramId  = 0;
 var cachingTime = 60000;
 var codeAcore = "";
 var getOnlyHoraire = false;
+var accessFile = null;
 var DISFEObject = null;
 var start = new Date();
 var apicache = require('apicache').options({ debug: false }).middleware;
@@ -111,6 +112,11 @@ var SampleApp = function()
         ].forEach(function(element, index, array) {
             process.on(element, function() { self.terminator(element); });
         });
+
+
+
+
+
     };
 
 
@@ -150,6 +156,11 @@ var SampleApp = function()
            
             
         };*/
+
+
+
+
+
         self.routes['/api/acores/siteAcore/filtreGuichet/:codeAcore/:id'] = function (req, res)
         {
 
@@ -230,7 +241,51 @@ var SampleApp = function()
         self.app = express();
         self.app.enable('trust proxy');
         self.app.set("trust proxy", true);
+        
+      /*  self.app.all('/*', function (req, res, next) {
 
+           
+
+
+          console.log('Accessing the secret section ...');
+          // pass control to the next handler
+        }); */
+      
+        self.app.use(function (req, res, next) {
+
+        var forwardedIpsStr = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+           if (forwardedIpsStr) {
+
+            if(accessFile != null){
+                var obj = JSON.parse(accessFile);
+                var allowedIp = obj.Allow;
+                console.log(JSON.stringify(allowedIp));
+                try{
+                    var isAllowedDomain = false;
+                    for(var nextip in allowedIp) {
+                        console.log(allowedIp[nextip].domain);
+                        if((forwardedIpsStr.indexOf(allowedIp[nextip].domain) > -1) && allowedIp[nextip].allowed == "true"){
+                            isAllowedDomain = true;
+                        }else{
+                            console.log(forwardedIpsStr+" is not in domain "+allowedIp[nextip].domain);
+                        }
+                    }
+                    if(isAllowedDomain){
+                        next();
+                    }else{
+                        res.sendStatus(403)  
+                        res.end();
+                    }
+                }catch(Err){
+                    console.log("error "+Err);
+                }
+            }
+
+               
+
+           } 
+        });
+      
 
         //  Add handlers for the app (from the routes).
         for (var r in self.routes)
@@ -249,12 +304,13 @@ var SampleApp = function()
         self.populateCache();
         self.setupTerminationHandlers();
 
+
         // Create the express server and routes.
         self.initializeServer();
     };
 
 
- 
+    
 
 
     /**
@@ -262,16 +318,28 @@ var SampleApp = function()
      */
     self.start = function()
     {
+
+
+
+           var fs = require('fs');
+           fs.readFile(('access.json'), function(errorreadfile, datafile) {
+                if (errorreadfile) {
+                        console.info(errorreadfile);
+                     }else{
+                        accessFile = datafile;
+                     }
+          });
         //  Start the app on the specific interface (and port).
         self.app.listen(self.port, self.ipaddress, function()
         {
             console.log('%s: Node server started on %s:%d ...', Date(Date.now() ), self.ipaddress, self.port);
         });
+        
 
-        self.app.on('connection',function(socket){
+        
 
-            res.send('your ip :'+socket.remoteAddress);
-        });
+
+       
     };
 
     console.log("HELLO");
@@ -609,7 +677,7 @@ var options = {
                 'Content-Type': 'application/json',
                 'Cache-Control':'max-age=60'
       },
-   //  agent: agent,
+     agent: agent,
       port:80
 };
 
