@@ -66,6 +66,7 @@ var SampleApp = function()
         self.app.set("trust proxy", true);
         winston.add(winston.transports.File, { filename: 'somefile.log' });
         winston.remove(winston.transports.Console);
+        winston.level = 'debug';
         winston.log('info', "Restart server");
         /*  self.app.all('/*', function (req, res, next) {
 
@@ -115,8 +116,7 @@ var SampleApp = function()
         });
 
         for (var r in self.routes) {
-            //self.app.get(r, apicache('2 minutes'), self.routes[r]);
-            self.app.get(r, self.routes[r]);
+            self.app.get(r, apicache('2 minutes'), self.routes[r]);
         }
        
     };
@@ -137,7 +137,7 @@ var SampleApp = function()
         fs.readFile(('access.json'), function(errorreadfile, datafile) {
             if (errorreadfile) {
                 //console.info(errorreadfile);
-                winston.log('info','error reading access.json', errorreadfile);
+                winston.log('debug','error reading access.json', errorreadfile);
             } else {
                 accessFile = datafile;
             }
@@ -395,7 +395,7 @@ var SampleApp = function()
             }
         } catch (error) {
             //res.write("erreur traitement Json Acore v1 :" + error);
-             winston.log('info', 'traitement Json Acore v1',  error);
+             winston.log('debug', 'traitement Json Acore v1',  error);
             res.sendStatus(502);
            // console.info("erreur traitement Json Acore v1 : " + error);
            
@@ -457,7 +457,7 @@ var SampleApp = function()
         } catch (error) {
             // res.write("erreur traitement Json Acore v2 :"+error);
             //console.info("erreur traitement Json Acore v2 : " + error);
-            winston.log('info','traitement Json Acore v2', error);
+            winston.log('debug','traitement Json Acore v2', error);
        
             res.sendStatus(502);
 
@@ -582,7 +582,7 @@ var SampleApp = function()
 
            // res.write("erreur traitement horaire Acore v2 :" + error);
             //console.info("erreur traitement horaire Acore v2  : " + error);
-             winston.log('info','traitement horaire Acore v2', error);
+             winston.log('debug','traitement horaire Acore v2', error);
             res.sendStatus(502);
             
         }
@@ -646,7 +646,7 @@ var SampleApp = function()
                         } catch (error) {
                            // res.write("erreur en phase d'authentification V1 :" + error);
                            // console.info("erreur en phase d'authentification V1 : " + error);
-                            winston.log('info','erreur en phase d authentification V1', error);
+                            winston.log('debug','erreur en phase d authentification V1', error);
                             
                             
 
@@ -672,7 +672,7 @@ var SampleApp = function()
 
                             //  res.write("erreur en phase d'authentification V2"+error);
                             //console.info("erreur en phase d'authentification V2" + error);
-                            winston.log('info','erreur en phase d authentification V2', error);
+                            winston.log('debug','erreur en phase d authentification V2', error);
                            
                             
 

@@ -17,3 +17,16 @@
 {"level":"info","timestamp":"2015-12-09T16:52:53.268Z"}
 {"level":"info","timestamp":"2015-12-09T16:52:53.882Z"}
 {"level":"info","timestamp":"2015-12-09T16:52:53.883Z"}
+{"level":"info","message":"Restart server","timestamp":"2015-12-09T17:01:40.555Z"}
+{"code":"ETIMEDOUT","errno":"ETIMEDOUT","syscall":"connect","address":"94.124.134.108","port":80,"level":"info","timestamp":"2015-12-09T17:02:07.263Z"}
+{"code":"ETIMEDOUT","errno":"ETIMEDOUT","syscall":"connect","address":"94.124.134.108","port":80,"level":"info","timestamp":"2015-12-09T17:02:15.710Z"}
+{"code":"ETIMEDOUT","errno":"ETIMEDOUT","syscall":"connect","address":"94.124.134.108","port":80,"level":"info","timestamp":"2015-12-09T17:02:26.082Z"}
+{"code":"ETIMEDOUT","errno":"ETIMEDOUT","syscall":"connect","address":"94.124.134.108","port":80,"level":"info","timestamp":"2015-12-09T17:02:37.098Z"}
+{"level":"info","message":"Restart server","timestamp":"2015-12-09T17:02:47.380Z"}
+{"level":"info","timestamp":"2015-12-09T17:02:52.647Z"}
+{"level":"info","timestamp":"2015-12-09T17:02:53.300Z"}
+{"level":"info","timestamp":"2015-12-09T17:02:53.301Z"}
+{"level":"info","message":"Restart server","timestamp":"2015-12-09T17:05:24.968Z"}
+{"level":"debug","timestamp":"2015-12-09T17:05:36.022Z"}
+{"level":"debug","timestamp":"2015-12-09T17:05:36.949Z"}
+{"level":"debug","timestamp":"2015-12-09T17:05:36.950Z"}
