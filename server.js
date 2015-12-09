@@ -232,9 +232,7 @@ var SampleApp = function()
 
         self.app.use(function(req, res, next) {
 
-            for (var r in self.routes) {
-                                self.app.get(r, apicache('5 minutes'), self.routes[r]);
-            }
+           
 
             var forwardedIpsStr = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
             if (forwardedIpsStr) {
@@ -271,7 +269,9 @@ var SampleApp = function()
             }
         });
 
-
+         for (var r in self.routes) {
+                    self.app.get(r, apicache('5 minutes'), self.routes[r]);
+            }
        
     };
 
