@@ -310,12 +310,7 @@ var SampleApp = function()
     };
 
 
-<<<<<<< HEAD
-    
 
-
-=======
->>>>>>> origin/master
     /**
      *  Start the server (starts up the sample application).
      */
@@ -337,15 +332,13 @@ var SampleApp = function()
         {
             console.log('%s: Node server started on %s:%d ...', Date(Date.now() ), self.ipaddress, self.port);
         });
-<<<<<<< HEAD
+
         
 
         
 
 
        
-=======
->>>>>>> origin/master
     };
 
     console.log("HELLO");
