@@ -310,9 +310,12 @@ var SampleApp = function()
     };
 
 
+<<<<<<< HEAD
     
 
 
+=======
+>>>>>>> origin/master
     /**
      *  Start the server (starts up the sample application).
      */
@@ -334,12 +337,15 @@ var SampleApp = function()
         {
             console.log('%s: Node server started on %s:%d ...', Date(Date.now() ), self.ipaddress, self.port);
         });
+<<<<<<< HEAD
         
 
         
 
 
        
+=======
+>>>>>>> origin/master
     };
 
     console.log("HELLO");
@@ -514,9 +520,9 @@ function setDataAcoreV2(res,data){
     }
 	catch(error)
 	{
-
         res.write("erreur traitement Json Acore v2 :"+error);
         console.info("erreur traitement Json Acore v2 : "+error);
+		res.send(401, {error: e});
         res.end();
     }
 
@@ -677,14 +683,13 @@ var options = {
                 'Content-Type': 'application/json',
                 'Cache-Control':'max-age=60'
       },
-     agent: agent,
+    // agent: agent,
       port:80
 };
 
 
-var reqGet = http.request(options, function(result) {
-
-
+var reqGet = http.request(options, function(result) 
+{
     var chunks = [];
     // Recuperation des Partials Data
     result.on('data', function(chunk) {
@@ -746,6 +751,7 @@ var reqGet = http.request(options, function(result) {
 
                     res.write("erreur en phase d'authentification V2"+error);
                     console.info("erreur en phase d'authentification V2"+error);
+					res.send(401, {error: e});
                     res.end();
 
                 }
@@ -756,9 +762,7 @@ var reqGet = http.request(options, function(result) {
 			catch(error)
 			{
                 // Autre status
-                res.write("erreur status code non attendu "+error);
-                console.info("erreur status code non attendu "+error);
-                res.end();
+				 res.send(401, {error: e});
 			}
         }
 
@@ -766,9 +770,7 @@ var reqGet = http.request(options, function(result) {
 		try{}
 		catch(error)
 		{
-        res.write("pas de reponse valide AcoreV1 ou AcoreV2 dans le temps imparti ( codeAcore ou id invalide ? ) "+error);
-		 console.info("pas de reponse valide AcoreV1 ou AcoreV2 dans le temps imparti ( codeAcore ou id invalide ? )"+error);
-        res.end();
+        res.send(401, {error: e});
         nbTentativeConnexion = 0;
 		}
     }
@@ -776,25 +778,15 @@ var reqGet = http.request(options, function(result) {
    
     });
 
-    
-
- 
 });
  
 reqGet.end();
-reqGet.on('error', function(e) {
+reqGet.on('error', function(e) 
+{
     console.error(e);
 });
 
 }
-
-
-
-
-
-
-
-
 
 
 };   /*  Sample Application.  */
