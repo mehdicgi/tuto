@@ -206,7 +206,7 @@ var SampleApp = function()
 
         self.routes['/'] = function(req, res) {
             res.sendStatus(200);
-            res.end();
+            
         };
     };
 
@@ -252,12 +252,10 @@ var SampleApp = function()
                             }
                         }
                         if (isAllowedDomain) {
-                             //  Add handlers for the app (from the routes).
-                          
                             next();
                         } else {
                             res.sendStatus(403);
-                            res.end();
+                            
                         }
                     } catch (Err) {
                         console.log("error " + Err);
@@ -269,9 +267,9 @@ var SampleApp = function()
             }
         });
 
-         for (var r in self.routes) {
-                    self.app.get(r, apicache('5 minutes'), self.routes[r]);
-            }
+        for (var r in self.routes) {
+            self.app.get(r, apicache('5 minutes'), self.routes[r]);
+        }
        
     };
 
@@ -352,6 +350,7 @@ var SampleApp = function()
                 console.info("********* acore v2 data **********" + '\n\n');
                 nbTentativeConnexion = 0;
                 setDataAcoreV2(response, data);
+                 console.info("after setDataAcoreV2");
                 if (!getOnlyHoraire) {
                     response.send(JSON.stringify(DISFEObject));
                     //response.write(JSON.stringify(DISFEObject));
@@ -359,6 +358,7 @@ var SampleApp = function()
                     response.send(JSON.stringify(DISFEObject));
                     //response.write(JSON.stringify(DISFEObject.horaires)); 
                 }
+                console.info("before response end");
                 response.end();
 
                 var end = new Date() - start;
@@ -388,7 +388,7 @@ var SampleApp = function()
             //res.write("erreur traitement Json Acore v1 :" + error);
             res.sendStatus(502);
             console.info("erreur traitement Json Acore v1 : " + error);
-            res.end();
+            
         }
 
     }
@@ -447,9 +447,11 @@ var SampleApp = function()
         } catch (error) {
             // res.write("erreur traitement Json Acore v2 :"+error);
             console.info("erreur traitement Json Acore v2 : " + error);
-
+       
             res.sendStatus(502);
-            res.end();
+
+            console.info("sendStatus : " + error);
+            
         }
 
     }
@@ -573,7 +575,7 @@ var SampleApp = function()
            // res.write("erreur traitement horaire Acore v2 :" + error);
             console.info("erreur traitement horaire Acore v2 A TESTER : " + error);
             res.sendStatus(502);
-            res.end();
+            
         }
     }
 
@@ -606,7 +608,7 @@ var SampleApp = function()
                 'Content-Type': 'application/json',
                 'Cache-Control': 'max-age=60'
             },
-            //  agent: agent,
+              agent: agent,
             port: 80
         };
 
@@ -637,8 +639,8 @@ var SampleApp = function()
                         } catch (error) {
                            // res.write("erreur en phase d'authentification V1 :" + error);
                             console.info("erreur en phase d'authentification V1 : " + error);
-                            res.sendStatus(401);
-                            res.end();
+                            
+                            
 
                         }
 
@@ -663,8 +665,8 @@ var SampleApp = function()
 
                             //  res.write("erreur en phase d'authentification V2"+error);
                             console.info("erreur en phase d'authentification V2" + error);
-                            res.sendStatus(401);
-                            res.end();
+                           
+                            
 
                         }
 
