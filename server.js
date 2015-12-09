@@ -37,6 +37,121 @@ var SampleApp = function()
 
     //  Scope.
     var self = this;
+    var winston = require('winston');
+
+ 
+ 
+
+     /**
+     *  Initializes the sample application.
+     */
+    self.initialize = function() {
+        self.setupVariables();
+        self.populateCache();
+        self.setupTerminationHandlers();
+
+
+        // Create the express server and routes.
+        self.initializeServer();
+    };
+
+        /**
+     *  Initialize the server (express) and create the routes and register
+     *  the handlers.
+     */
+    self.initializeServer = function() {
+        self.createRoutes();
+        self.app = express();
+        self.app.enable('trust proxy');
+        self.app.set("trust proxy", true);
+        winston.add(winston.transports.File, { filename: 'somefile.log' });
+        winston.remove(winston.transports.Console);
+        winston.log('info', "Restart server");
+        /*  self.app.all('/*', function (req, res, next) {
+
+             
+
+
+            console.log('Accessing the secret section ...');
+            // pass control to the next handler
+        }); */
+
+        self.app.use(function(req, res, next) {
+
+           
+
+            var forwardedIpsStr = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+            if (forwardedIpsStr) {
+
+                if (accessFile != null) {
+                    var obj = JSON.parse(accessFile);
+                    var allowedIp = obj.Allow;
+                    try {
+                        var isAllowedDomain = false;
+                        for (var nextip in allowedIp) {
+                            if ((forwardedIpsStr.indexOf(allowedIp[nextip].domain) > -1) && allowedIp[nextip].allowed == "true") {
+                                isAllowedDomain = true;
+                            } else {
+
+                            }
+                        }
+                        if (isAllowedDomain) {
+                            next();
+                        } else {
+                            winston.log('access forbidden', forwardedIpsStr);
+                            res.sendStatus(403);
+
+                            
+                        }
+                    } catch (Err) {
+                       // console.log("error " + Err);
+                        winston.log('info', 'error access',Err);
+                    }
+                }
+
+
+
+            }
+        });
+
+        for (var r in self.routes) {
+            //self.app.get(r, apicache('2 minutes'), self.routes[r]);
+            self.app.get(r, self.routes[r]);
+        }
+       
+    };
+
+
+  
+
+
+
+    /**
+     *  Start the server (starts up the sample application).
+     */
+    self.start = function() {
+
+
+
+        var fs = require('fs');
+        fs.readFile(('access.json'), function(errorreadfile, datafile) {
+            if (errorreadfile) {
+                //console.info(errorreadfile);
+                winston.log('info','error reading access.json', errorreadfile);
+            } else {
+                accessFile = datafile;
+            }
+        });
+        //  Start the app on the specific interface (and port).
+        self.app.listen(self.port, self.ipaddress, function() {
+           // console.log('%s: Node server started on %s:%d ...', Date(Date.now()), self.ipaddress, self.port);
+            winston.log('%s: Node server started on %s:%d ...', Date(Date.now()), self.ipaddress, self.port);
+        });
+
+
+
+
+    };
 
 
     /*  ================================================================  */
@@ -56,7 +171,7 @@ var SampleApp = function()
         if (typeof self.ipaddress === "undefined") {
             //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
             //  allows us to run/test the app locally.
-            console.warn('No OPENSHIFT_*_IP var, using 127.0.0.1');
+           // console.warn('No OPENSHIFT_*_IP var, using 127.0.0.1');
             self.ipaddress = "127.0.0.1";
         };
     };
@@ -95,11 +210,13 @@ var SampleApp = function()
      */
     self.terminator = function(sig) {
         if (typeof sig === "string") {
-            console.log('%s: Received %s - terminating sample app ...',
-                Date(Date.now()), sig);
+          //  console.log('%s: Received %s - terminating sample app ...',
+          //      Date(Date.now()), sig);
+             winston.log('%s: Received %s - terminating sample app ...',Date(Date.now()), sig);
             process.exit(1);
         }
-        console.log('%s: Node server stopped.', Date(Date.now()));
+        //console.log('%s: Node server stopped.', Date(Date.now()));
+         winston.log('%s: Node server stopped.', Date(Date.now()));
     };
 
 
@@ -156,7 +273,7 @@ var SampleApp = function()
                 codeAcore = req.params.codeAcore;
                 start = new Date();
                 pathApi = '/api/acores/bureau_detail/' + codeAcore + '?id=' + paramId + '&session=' + apiKey;
-                DISFEObject = setTemplateDIFSE();
+                DISFEObject = createDIFSEObject();
                 performResponse(res, 0, "");
             }
         };
@@ -178,7 +295,7 @@ var SampleApp = function()
                 codeAcore = req.params.codeAcore;
                 start = new Date();
                 pathApi = '/api/acores/bureau_detail/' + codeAcore + '?id=' + paramId + '&session=' + apiKey;
-                DISFEObject = setTemplateDIFSE();
+                DISFEObject = createDIFSEObject();
                 performResponse(res, 0, "");
             }
         };
@@ -211,109 +328,7 @@ var SampleApp = function()
     };
 
 
-    /**
-     *  Initialize the server (express) and create the routes and register
-     *  the handlers.
-     */
-    self.initializeServer = function() {
-        self.createRoutes();
-        self.app = express();
-        self.app.enable('trust proxy');
-        self.app.set("trust proxy", true);
 
-        /*  self.app.all('/*', function (req, res, next) {
-
-             
-
-
-            console.log('Accessing the secret section ...');
-            // pass control to the next handler
-        }); */
-
-        self.app.use(function(req, res, next) {
-
-           
-
-            var forwardedIpsStr = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-            if (forwardedIpsStr) {
-
-                if (accessFile != null) {
-                    var obj = JSON.parse(accessFile);
-                    var allowedIp = obj.Allow;
-                    console.log(JSON.stringify(allowedIp));
-                    try {
-                        var isAllowedDomain = false;
-                        for (var nextip in allowedIp) {
-                            console.log(allowedIp[nextip].domain);
-                            if ((forwardedIpsStr.indexOf(allowedIp[nextip].domain) > -1) && allowedIp[nextip].allowed == "true") {
-                                isAllowedDomain = true;
-                            } else {
-                                console.log(forwardedIpsStr + " is not in domain " + allowedIp[nextip].domain);
-                            }
-                        }
-                        if (isAllowedDomain) {
-                            next();
-                        } else {
-                            res.sendStatus(403);
-                            
-                        }
-                    } catch (Err) {
-                        console.log("error " + Err);
-                    }
-                }
-
-
-
-            }
-        });
-
-        for (var r in self.routes) {
-            //self.app.get(r, apicache('2 minutes'), self.routes[r]);
-            self.app.get(r, self.routes[r]);
-        }
-       
-    };
-
-
-    /**
-     *  Initializes the sample application.
-     */
-    self.initialize = function() {
-        self.setupVariables();
-        self.populateCache();
-        self.setupTerminationHandlers();
-
-
-        // Create the express server and routes.
-        self.initializeServer();
-    };
-
-
-
-    /**
-     *  Start the server (starts up the sample application).
-     */
-    self.start = function() {
-
-
-
-        var fs = require('fs');
-        fs.readFile(('access.json'), function(errorreadfile, datafile) {
-            if (errorreadfile) {
-                console.info(errorreadfile);
-            } else {
-                accessFile = datafile;
-            }
-        });
-        //  Start the app on the specific interface (and port).
-        self.app.listen(self.port, self.ipaddress, function() {
-            console.log('%s: Node server started on %s:%d ...', Date(Date.now()), self.ipaddress, self.port);
-        });
-
-
-
-
-    };
 
     //**************************************************************************
     // CG : 09-11-2014 Function de changement de phase pour les 4 requetes
@@ -325,13 +340,13 @@ var SampleApp = function()
         switch (numPhase) {
             // Tentative de connexion Acore V1  
             case 0:
-                console.info("********* acore v1 connexion **********" + '\n\n');
+               
                 pathApi = '/api/acores/bureau_detail/' + codeAcore + '?id=' + paramId + '&session=' + apiKey;
                 performRequest(response, numPhase);
                 break;
                 // Tentative de récuperation Json Acore V1      
             case 1:
-                console.info("********* acore v1 data **********" + '\n\n');
+                
                 nbTentativeConnexion = 0;
                 setDataAcoreV1(response, data);
                 apiKey = 'badae6cf02734ac34c50cb58d3877d39';
@@ -341,17 +356,15 @@ var SampleApp = function()
                 break;
                 // Tentative de connexion Acore V2
             case 2:
-                console.info("********* acore v2 connexion **********" + '\n\n');
+                
                 pathApi = '/api/acores/bureau_detail_v2/' + codeAcore + '?id=' + paramId + '&session=' + apiKey + '&use_http_status_code=0';
-                console.info('http://www.laposte.fr' + pathApi + '\n\n');
                 performRequest(response, numPhase);
                 break;
                 // Tentative de récuperation Json Acore V2
             case 3:
-                console.info("********* acore v2 data **********" + '\n\n');
+               
                 nbTentativeConnexion = 0;
                 setDataAcoreV2(response, data);
-                 console.info("after setDataAcoreV2");
                 if (!getOnlyHoraire) {
                     response.send(JSON.stringify(DISFEObject));
                     //response.write(JSON.stringify(DISFEObject));
@@ -359,11 +372,9 @@ var SampleApp = function()
                     response.send(JSON.stringify(DISFEObject));
                     //response.write(JSON.stringify(DISFEObject.horaires)); 
                 }
-                console.info("before response end");
                 response.end();
 
                 var end = new Date() - start;
-                console.info("Execution time: %dms", end);
                 break;
         }
 
@@ -381,14 +392,13 @@ var SampleApp = function()
             if (!getOnlyHoraire) {
                 var obj = JSON.parse(data);
                 DISFEObject.codeRegate = obj.bureaux.codeRegate;
-                //  DISFEObject.services = obj.bureaux.services;
-                //  DISFEObject.accessibilite = obj.bureaux.accessibilite;
-                console.info('{"codeRegate": "' + obj.bureaux.codeRegate + '"}' + '\n\n');
             }
         } catch (error) {
             //res.write("erreur traitement Json Acore v1 :" + error);
+             winston.log('info', 'traitement Json Acore v1',  error);
             res.sendStatus(502);
-            console.info("erreur traitement Json Acore v1 : " + error);
+           // console.info("erreur traitement Json Acore v1 : " + error);
+           
             
         }
 
@@ -440,18 +450,18 @@ var SampleApp = function()
 
             }
 
-            console.log(JSON.stringify(DISFEObject));
 
             DISFEObject.horaires = getHoraires(obj.bureaux[codeAcore].horaires, codeAcore, DISFEObject.codeRegate);
 
 
         } catch (error) {
             // res.write("erreur traitement Json Acore v2 :"+error);
-            console.info("erreur traitement Json Acore v2 : " + error);
+            //console.info("erreur traitement Json Acore v2 : " + error);
+            winston.log('info','traitement Json Acore v2', error);
        
             res.sendStatus(502);
 
-            console.info("sendStatus : " + error);
+            //console.info("sendStatus : " + error);
             
         }
 
@@ -461,9 +471,9 @@ var SampleApp = function()
     // CG : 10-11-2014 Function de creation d'un objet DIFSE
     // Retour : Object DIFSE(vide)
     //**************************************************************************
-    function setTemplateDIFSE() {
+    function createDIFSEObject() {
 
-        var DifseReponse = {
+        var DifseObject = {
             codeAcores: "null",
             codeRegate: "null",
             libelleCourt: "null",
@@ -489,21 +499,18 @@ var SampleApp = function()
             accessibilite: null
         };
 
-        return DifseReponse;
+        return DifseObject;
 
     }
 
     function getHoraires(horairesV2, codeAcore, codeRegate) {
 
-        console.info("try getting horaires");
         try {
             var horaires = horairesV2;
             var tabHoraireFormatted = new Array();
 
             for (var horaire in horaires) {
                 if (horaires.hasOwnProperty(horaire)) {
-                    console.info(horaire + " -> " + horaires[horaire].horaires.length);
-                    //   console.info("gethoraire : "+horaires[horaire].horaires.toString());
                     var oneHoraire = new Object();
                     oneHoraire.codSitAcores = codeAcore;
                     oneHoraire.codEntRegate = codeRegate;
@@ -574,7 +581,8 @@ var SampleApp = function()
         } catch (error) {
 
            // res.write("erreur traitement horaire Acore v2 :" + error);
-            console.info("erreur traitement horaire Acore v2 A TESTER : " + error);
+            //console.info("erreur traitement horaire Acore v2  : " + error);
+             winston.log('info','traitement horaire Acore v2', error);
             res.sendStatus(502);
             
         }
@@ -597,7 +605,6 @@ var SampleApp = function()
         var agent = new HttpProxyAgent(proxy);
         /**********************************************/
 
-        console.info("tentative de connexion sur : " + hostApi + pathApi + '\n\n');
 
         // parametre de connexion
         var options = {
@@ -633,13 +640,13 @@ var SampleApp = function()
                         try {
                             var obj = JSON.parse(stringBuffer);
                             apiKey = md5(Keysession + obj.token);
-                            console.info(" generation apiKeySession Acore V1 : " + md5(Keysession + obj.token) + '\n\n');
                             nbTentativeConnexion++;
                             performResponse(res, (phase), stringBuffer);
 
                         } catch (error) {
                            // res.write("erreur en phase d'authentification V1 :" + error);
-                            console.info("erreur en phase d'authentification V1 : " + error);
+                           // console.info("erreur en phase d'authentification V1 : " + error);
+                            winston.log('info','erreur en phase d authentification V1', error);
                             
                             
 
@@ -655,7 +662,6 @@ var SampleApp = function()
                                     // recuperation Token generation clef de session ( Acore V2 )
                                     var obj = JSON.parse(stringBuffer);
                                     apiKey = md5(Keysession + obj.token);
-                                    console.info(" generation apiKeySession Acore v2 : " + md5(Keysession + obj.token) + '\n\n');
                                     nbTentativeConnexion++;
                                     performResponse(res, (phase), stringBuffer);
                                 }
@@ -665,7 +671,8 @@ var SampleApp = function()
                         } catch (error) {
 
                             //  res.write("erreur en phase d'authentification V2"+error);
-                            console.info("erreur en phase d'authentification V2" + error);
+                            //console.info("erreur en phase d'authentification V2" + error);
+                            winston.log('info','erreur en phase d authentification V2', error);
                            
                             
 
@@ -685,7 +692,8 @@ var SampleApp = function()
 
         reqGet.end();
         reqGet.on('error', function(error) {
-            console.error(error);
+           // console.error(error);
+             winston.log('info','getting requete', error);
         });
 
     }
