@@ -16,10 +16,9 @@ var hostApi = 'webservice.laposte.fr';
 var HttpProxyAgent = require('http-proxy-agent');
 /*************/
 var numPhase = 0;
-var nbTentativeConnexion = 0;
 var paramId = 0;
 // caching time in second
-var cachingTime = 60000;
+var cachingTime = "2 minutes";
 var codeAcore = "";
 var getOnlyHoraire = false;
 var accessFile = null;
@@ -38,14 +37,20 @@ var SampleApp = function()
     //  Scope.
     var self = this;
     var winston = require('winston');
+    var debug = false;
+    process.argv.forEach(function(val, index, array) {
+      if(val == "debug"){
+        debug = true;
+      }
+    });
 
- 
- 
-
-     /**
-     *  Initializes the sample application.
-     */
+    /**
+    *  Initializes the sample application.
+    */
     self.initialize = function() {
+        winston.add(winston.transports.File, { filename: 'debug.log' });
+        winston.remove(winston.transports.Console);
+
         self.setupVariables();
         self.populateCache();
         self.setupTerminationHandlers();
@@ -53,6 +58,7 @@ var SampleApp = function()
 
         // Create the express server and routes.
         self.initializeServer();
+
     };
 
         /**
@@ -64,22 +70,9 @@ var SampleApp = function()
         self.app = express();
         self.app.enable('trust proxy');
         self.app.set("trust proxy", true);
-        winston.add(winston.transports.File, { filename: 'somefile.log' });
-        winston.remove(winston.transports.Console);
-        winston.level = 'debug';
-        winston.log('info', "Restart server");
-        /*  self.app.all('/*', function (req, res, next) {
 
-             
-
-
-            console.log('Accessing the secret section ...');
-            // pass control to the next handler
-        }); */
 
         self.app.use(function(req, res, next) {
-
-           
 
             var forwardedIpsStr = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
             if (forwardedIpsStr) {
@@ -97,16 +90,16 @@ var SampleApp = function()
                             }
                         }
                         if (isAllowedDomain) {
+
                             next();
                         } else {
-                            winston.log('access forbidden', forwardedIpsStr);
+                            winston.error('access forbidden', forwardedIpsStr);
                             res.sendStatus(403);
 
                             
                         }
                     } catch (Err) {
-                       // console.log("error " + Err);
-                        winston.log('info', 'error access',Err);
+                        winston.error('info', 'error access',Err);
                     }
                 }
 
@@ -116,7 +109,7 @@ var SampleApp = function()
         });
 
         for (var r in self.routes) {
-            self.app.get(r, apicache('2 minutes'), self.routes[r]);
+            self.app.get(r, apicache(cachingTime), self.routes[r]);
         }
        
     };
@@ -137,15 +130,14 @@ var SampleApp = function()
         fs.readFile(('access.json'), function(errorreadfile, datafile) {
             if (errorreadfile) {
                 //console.info(errorreadfile);
-                winston.log('debug','error reading access.json', errorreadfile);
+                winston.error('debug','error reading access.json', errorreadfile);
             } else {
                 accessFile = datafile;
             }
         });
         //  Start the app on the specific interface (and port).
         self.app.listen(self.port, self.ipaddress, function() {
-           // console.log('%s: Node server started on %s:%d ...', Date(Date.now()), self.ipaddress, self.port);
-            winston.log('%s: Node server started on %s:%d ...', Date(Date.now()), self.ipaddress, self.port);
+            winston.info('%s: Node server started on %s:%d', Date(Date.now()), self.ipaddress, self.port,'Environment :', debug ? 'DEBUG':'PROD');
         });
 
 
@@ -171,7 +163,6 @@ var SampleApp = function()
         if (typeof self.ipaddress === "undefined") {
             //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
             //  allows us to run/test the app locally.
-           // console.warn('No OPENSHIFT_*_IP var, using 127.0.0.1');
             self.ipaddress = "127.0.0.1";
         };
     };
@@ -210,13 +201,10 @@ var SampleApp = function()
      */
     self.terminator = function(sig) {
         if (typeof sig === "string") {
-          //  console.log('%s: Received %s - terminating sample app ...',
-          //      Date(Date.now()), sig);
-             winston.log('%s: Received %s - terminating sample app ...',Date(Date.now()), sig);
+             winston.info('%s: Received %s - terminating sample app ...',Date(Date.now()), sig);
             process.exit(1);
         }
-        //console.log('%s: Node server stopped.', Date(Date.now()));
-         winston.log('%s: Node server stopped.', Date(Date.now()));
+         winston.info('%s: Node server stopped.', Date(Date.now()));
     };
 
 
@@ -300,26 +288,28 @@ var SampleApp = function()
             }
         };
 
-        // comment for PROD
-        /*
-        self.routes['/env'] = function(req, res) {
-            var content = 'Version: ' + process.version + '\n<br/>\n' +
-                'Env: {<br/>\n<pre>';
-            //  Add env entries.
-            for (var k in process.env) {
-                content += '   ' + k + ': ' + process.env[k] + '\n';
-            }
-            content += '}\n</pre><br/>\n'
-            res.send('<html>\n' +
-                '  <head><title>Node.js Process Env</title></head>\n' +
-                '  <body>\n<br/>\n' + content + '</body>\n</html>');
-        };
+        
+        if(debug){
+        
+            self.routes['/env'] = function(req, res) {
+                var content = 'Version: ' + process.version + '\n<br/>\n' +
+                    'Env: {<br/>\n<pre>';
+                //  Add env entries.
+                for (var k in process.env) {
+                    content += '   ' + k + ': ' + process.env[k] + '\n';
+                }
+                content += '}\n</pre><br/>\n'
+                res.send('<html>\n' +
+                    '  <head><title>Node.js Process Env</title></head>\n' +
+                    '  <body>\n<br/>\n' + content + '</body>\n</html>');
+            };
 
-        self.routes['/'] = function(req, res) {
-            res.set('Content-Type', 'text/html');
-            res.send(self.cache_get('index.html'));
-        };
-        */
+            self.routes['/'] = function(req, res) {
+                res.set('Content-Type', 'text/html');
+                res.send(self.cache_get('index.html'));
+            };
+        
+        }
 
         self.routes['/'] = function(req, res) {
             res.sendStatus(200);
@@ -346,31 +336,23 @@ var SampleApp = function()
                 break;
                 // Tentative de récuperation Json Acore V1      
             case 1:
-                
-                nbTentativeConnexion = 0;
                 setDataAcoreV1(response, data);
                 apiKey = 'badae6cf02734ac34c50cb58d3877d39';
-                // hostApi = 'www.laposte.fr';
                 pathApi = '/api/acores/bureau_detail_v2/' + codeAcore + '?id=' + paramId + '&session=' + apiKey + '&use_http_status_code=0';
                 performRequest(response, numPhase + 1);
                 break;
                 // Tentative de connexion Acore V2
             case 2:
-                
                 pathApi = '/api/acores/bureau_detail_v2/' + codeAcore + '?id=' + paramId + '&session=' + apiKey + '&use_http_status_code=0';
                 performRequest(response, numPhase);
                 break;
                 // Tentative de récuperation Json Acore V2
             case 3:
-               
-                nbTentativeConnexion = 0;
                 setDataAcoreV2(response, data);
                 if (!getOnlyHoraire) {
                     response.send(JSON.stringify(DISFEObject));
-                    //response.write(JSON.stringify(DISFEObject));
                 } else {
                     response.send(JSON.stringify(DISFEObject));
-                    //response.write(JSON.stringify(DISFEObject.horaires)); 
                 }
                 response.end();
 
@@ -394,10 +376,8 @@ var SampleApp = function()
                 DISFEObject.codeRegate = obj.bureaux.codeRegate;
             }
         } catch (error) {
-            //res.write("erreur traitement Json Acore v1 :" + error);
-             winston.log('debug', 'traitement Json Acore v1',  error);
+             winston.error('debug', 'traitement Json Acore v1',  error);
             res.sendStatus(502);
-           // console.info("erreur traitement Json Acore v1 : " + error);
            
             
         }
@@ -455,14 +435,8 @@ var SampleApp = function()
 
 
         } catch (error) {
-            // res.write("erreur traitement Json Acore v2 :"+error);
-            //console.info("erreur traitement Json Acore v2 : " + error);
-            winston.log('debug','traitement Json Acore v2', error);
-       
+            winston.error('traitement Json Acore v2', error);
             res.sendStatus(502);
-
-            //console.info("sendStatus : " + error);
-            
         }
 
     }
@@ -579,10 +553,7 @@ var SampleApp = function()
             return tabHoraireFormatted;
 
         } catch (error) {
-
-           // res.write("erreur traitement horaire Acore v2 :" + error);
-            //console.info("erreur traitement horaire Acore v2  : " + error);
-             winston.log('debug','traitement horaire Acore v2', error);
+            winston.error('debug','traitement horaire Acore v2', error);
             res.sendStatus(502);
             
         }
@@ -598,29 +569,46 @@ var SampleApp = function()
 
     function performRequest(res, phase) {
 
-        /**********************************************/
-        /***************** cgi proxy ******************/
-        /**********************************************/
-        var proxy = 'http://fr-proxy.groupinfra.com:3128';
-        var agent = new HttpProxyAgent(proxy);
-        /**********************************************/
 
 
-        // parametre de connexion
-        var options = {
-            host: hostApi,
-            path: pathApi,
-            encoding: 'UTF-8',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Cache-Control': 'max-age=60'
-            },
-            //agent: agent,
-            port: 80
-        };
 
+        if(debug){
 
+            /**********************************************/
+            /***************** cgi proxy ******************/
+            /**********************************************/
+            var proxy = 'http://fr-proxy.groupinfra.com:3128';
+            var agent = new HttpProxyAgent(proxy);
+            /**********************************************/
+
+            var options = {
+                host: hostApi,
+                path: pathApi,
+                encoding: 'UTF-8',
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Cache-Control': 'max-age=60'
+                },
+                agent: agent,
+                port: 80
+            }; 
+        }else{
+            var options = {
+                host: hostApi,
+                path: pathApi,
+                encoding: 'UTF-8',
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Cache-Control': 'max-age=60'
+                },
+                port: 80
+            };
+
+        }
+
+        
         var reqGet = http.request(options, function(result) {
             var chunks = [];
             // Recuperation des Partials Data
@@ -631,25 +619,16 @@ var SampleApp = function()
             // Fin de reception des Partials data Concatenation et Traitement
             result.on('end', function() {
 
-
-                if (nbTentativeConnexion < 3) {
-
                     var stringBuffer = Buffer.concat(chunks);
                     // reception d'une erreur d'authentification "401" , recuperation Token et generation clef de session ( Acore v1 )
                     if (result.statusCode == "401") {
                         try {
                             var obj = JSON.parse(stringBuffer);
                             apiKey = md5(Keysession + obj.token);
-                            nbTentativeConnexion++;
                             performResponse(res, (phase), stringBuffer);
 
                         } catch (error) {
-                           // res.write("erreur en phase d'authentification V1 :" + error);
-                           // console.info("erreur en phase d'authentification V1 : " + error);
-                            winston.log('debug','erreur en phase d authentification V1', error);
-                            
-                            
-
+                            winston.error('debug','erreur en phase d authentification V1', error);
                         }
 
                         // reception resultat de la requete sans erreur 
@@ -662,28 +641,17 @@ var SampleApp = function()
                                     // recuperation Token generation clef de session ( Acore V2 )
                                     var obj = JSON.parse(stringBuffer);
                                     apiKey = md5(Keysession + obj.token);
-                                    nbTentativeConnexion++;
                                     performResponse(res, (phase), stringBuffer);
                                 }
                             } else {
                                 performResponse(res, (phase + 1), stringBuffer);
                             }
                         } catch (error) {
-
-                            //  res.write("erreur en phase d'authentification V2"+error);
-                            //console.info("erreur en phase d'authentification V2" + error);
-                            winston.log('debug','erreur en phase d authentification V2', error);
-                           
-                            
-
+                            winston.error('debug','erreur en phase d authentification V2', error);
                         }
 
                     }
-                } else {
-
-                    nbTentativeConnexion = 0;
-
-                }
+               
 
 
             });
@@ -692,15 +660,13 @@ var SampleApp = function()
 
         reqGet.end();
         reqGet.on('error', function(error) {
-           // console.error(error);
-             winston.log('info','getting requete', error);
+            winston.error('info','getting requete', error);
         });
 
     }
 
 
 }; 
-
 
 
 /**
