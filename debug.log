@@ -2,3 +2,80 @@
 {"level":"error","message":"traitement Json Acore v1 {\"message\":\"Cannot read property 'codeRegate' of undefined\",\"name\":\"TypeError\"}","timestamp":"2015-12-10T11:15:57.344Z"}
 {"level":"error","message":"traitement Json Acore v2 {\"message\":\"Cannot read property 'sdfdbbb' of undefined\",\"name\":\"TypeError\"}","timestamp":"2015-12-10T11:15:57.965Z"}
 {"level":"error","message":"erreur en phase d authentification V2 {\"message\":\"Can't set headers after they are sent.\",\"name\":\"Error\"}","timestamp":"2015-12-10T11:15:57.966Z"}
+{"level":"info","message":"Thu Dec 10 2015 15:41:18 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T14:41:18.739Z"}
+{"level":"info","message":"Thu Dec 10 2015 15:41:19 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T14:41:19.651Z"}
+{"level":"info","message":"Thu Dec 10 2015 15:42:21 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T14:42:21.347Z"}
+{"level":"info","message":"Thu Dec 10 2015 15:42:22 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T14:42:22.248Z"}
+{"level":"info","message":"Thu Dec 10 2015 15:42:37 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T14:42:37.018Z"}
+{"level":"info","message":"Thu Dec 10 2015 15:42:38 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T14:42:38.115Z"}
+{"level":"info","message":"Thu Dec 10 2015 15:53:50 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T14:53:50.415Z"}
+{"level":"info","message":"Thu Dec 10 2015 15:54:51 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T14:54:51.114Z"}
+{"level":"info","message":"Thu Dec 10 2015 15:55:19 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T14:55:19.123Z"}
+{"level":"info","message":"Thu Dec 10 2015 15:55:22 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T14:55:22.680Z"}
+{"level":"info","message":"Thu Dec 10 2015 15:55:44 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T14:55:44.745Z"}
+{"level":"info","message":"Thu Dec 10 2015 15:55:46 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T14:55:46.349Z"}
+{"level":"info","message":"Thu Dec 10 2015 15:57:12 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T14:57:12.363Z"}
+{"level":"info","message":"Thu Dec 10 2015 15:57:13 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T14:57:13.865Z"}
+{"level":"info","message":"Thu Dec 10 2015 15:58:04 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T14:58:04.418Z"}
+{"level":"info","message":"Thu Dec 10 2015 15:58:05 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T14:58:05.422Z"}
+{"level":"info","message":"Thu Dec 10 2015 15:59:06 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T14:59:06.621Z"}
+{"level":"info","message":"Thu Dec 10 2015 15:59:09 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T14:59:09.107Z"}
+{"level":"info","message":"Thu Dec 10 2015 15:59:33 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T14:59:33.220Z"}
+{"level":"info","message":"Thu Dec 10 2015 15:59:41 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T14:59:41.906Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:00:20 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T15:00:20.931Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:00:21 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T15:00:21.824Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:01:56 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T15:01:56.035Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:01:56 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T15:01:56.801Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:02:33 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T15:02:33.075Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:02:33 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T15:02:33.839Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:02:49 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T15:02:49.928Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:02:50 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T15:02:50.837Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:03:52 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T15:03:52.441Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:03:58 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T15:03:58.996Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:04:37 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T15:04:37.916Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:04:38 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T15:04:38.886Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:05:01 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T15:05:01.698Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:05:02 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T15:05:02.684Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:05:29 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T15:05:29.576Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:05:30 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T15:05:30.580Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:06:12 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T15:06:12.727Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:06:13 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T15:06:13.761Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:13:23 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T15:13:23.845Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:14:04 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T15:14:04.283Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:15:11 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T15:15:11.118Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:15:12 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T15:15:12.009Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:16:17 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T15:16:17.411Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:16:21 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T15:16:21.709Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:17:15 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T15:17:15.186Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:17:15 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T15:17:15.893Z"}
+{"level":"error","message":"traitement Json Acore v1 {\"message\":\"Cannot read property 'codeRegate' of undefined\",\"name\":\"TypeError\"}","timestamp":"2015-12-10T15:18:16.847Z"}
+{"level":"error","message":"traitement Json Acore v2 {\"message\":\"Cannot read property '08A' of undefined\",\"name\":\"TypeError\"}","timestamp":"2015-12-10T15:18:17.487Z"}
+{"level":"error","message":"erreur en phase d authentification V2 {\"message\":\"Can't set headers after they are sent.\",\"name\":\"Error\"}","timestamp":"2015-12-10T15:18:17.487Z"}
+{"level":"error","message":"traitement Json Acore v1 {\"message\":\"Cannot read property 'codeRegate' of undefined\",\"name\":\"TypeError\"}","timestamp":"2015-12-10T15:23:20.333Z"}
+{"level":"error","message":"traitement Json Acore v2 {\"message\":\"Cannot read property '08A' of undefined\",\"name\":\"TypeError\"}","timestamp":"2015-12-10T15:23:20.934Z"}
+{"level":"error","message":"erreur en phase d authentification V2 {\"message\":\"Can't set headers after they are sent.\",\"name\":\"Error\"}","timestamp":"2015-12-10T15:23:20.935Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:23:41 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T15:23:41.651Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:23:42 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T15:23:42.740Z"}
+{"level":"error","message":"error parsing refregateFile : {\"message\":\"JSON.Parse is not a function\",\"name\":\"TypeError\"}","timestamp":"2015-12-10T15:23:42.765Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:24:11 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T15:24:11.057Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:24:12 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T15:24:12.703Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:25:09 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T15:25:09.552Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:25:10 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T15:25:10.575Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:39:23 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T15:39:23.557Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:39:24 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T15:39:24.653Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:40:01 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T15:40:01.948Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:40:02 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T15:40:02.942Z"}
+{"level":"error","message":"code acore inconnu :08Aiiii","timestamp":"2015-12-10T15:40:05.050Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:42:01 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T15:42:01.254Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:42:02 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T15:42:02.716Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:52:23 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T15:52:23.489Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:52:24 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T15:52:24.475Z"}
+{"level":"error","message":"requete sur code acore inconnue : dqzd","timestamp":"2015-12-10T15:52:38.627Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:55:27 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T15:55:27.102Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:55:28 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T15:55:28.342Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:57:40 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T15:57:40.295Z"}
+{"level":"info","message":"Thu Dec 10 2015 16:57:41 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T15:57:41.292Z"}
+{"level":"info","message":"Thu Dec 10 2015 17:35:11 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T16:35:11.695Z"}
+{"level":"info","message":"Thu Dec 10 2015 17:35:17 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T16:35:17.333Z"}
+{"level":"info","message":"Thu Dec 10 2015 17:36:11 GMT+0100 (Paris, Madrid): Received SIGINT - terminating sample app ...","timestamp":"2015-12-10T16:36:11.855Z"}
+{"level":"info","message":"Thu Dec 10 2015 17:36:16 GMT+0100 (Paris, Madrid): Node server started on 127.0.0.1:9000 Environment : DEBUG","timestamp":"2015-12-10T16:36:16.947Z"}

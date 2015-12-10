@@ -22,8 +22,10 @@ var cachingTime = "2 minutes";
 var codeAcore = "";
 var getOnlyHoraire = false;
 var accessFile = null;
+var jsonrefregateFile = null;
 var DISFEObject = null;
 var start = new Date();
+var isregatefromfile = true;
 var apicache = require('apicache').options({
     debug: false
 }).middleware;
@@ -41,6 +43,9 @@ var SampleApp = function()
     process.argv.forEach(function(val, index, array) {
       if(val == "debug"){
         debug = true;
+      }
+      if(val == "notregatefile"){
+        isregatefromfile = false;
       }
     });
 
@@ -87,6 +92,8 @@ var SampleApp = function()
                             }
                         }
                         if (isAllowedDomain) {
+
+
                             next();
                         } else {
                             winston.info('ip client','access forbidden for ip :',forwardedIpsStr);
@@ -120,6 +127,19 @@ var SampleApp = function()
                 winston.error('debug','error reading access.json', errorreadfile);
             } else {
                 accessFile = datafile;
+            }
+        });
+
+        fs.readFile(('refregate.json'), function(errorreadfile, datafile) {
+            if (errorreadfile) {
+                winston.error('debug','error reading refregate.json', errorreadfile);
+            } else {
+                try{
+                    jsonrefregateFile = JSON.parse(datafile);
+                }catch(error){
+                     winston.error('error parsing refregateFile :',JSON.stringify(error, ["message", "arguments", "type", "name"]));
+                }
+                
             }
         });
         //  Start the app on the specific interface (and port).
@@ -233,46 +253,19 @@ var SampleApp = function()
 
         self.routes['/api/acores/siteAcore/filtreGuichet/:codeAcore/:id'] = function(req, res) {
 
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET');
-            res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-            // verification que la requete contient bien les paramatres attendus
-            if ((req.params.id.length > 0 && req.params.id > 0) && (req.params.codeAcore.length > 0)) {
-                
-                paramId = req.params.id;
-                getOnlyHoraire = false;
-                codeAcore = req.params.codeAcore;
-                start = new Date();
-                pathApi = '/api/acores/bureau_detail/' + codeAcore + '?id=' + paramId + '&session=' + apiKey;
-                DISFEObject = createDIFSEObject();
-                performResponse(res, 0, "");
-            }
+            redirectionRoute(req, res, "/api/acores/siteAcore/filtreGuichet/");
 
 
         };
 
         self.routes['/api/acores/siteAcore/horaires/:codeAcore/:id'] = function(req, res) {
 
-            res.header('Access-Control-Allow-Origin', '*');
 
-            // Request methods you wish to allow
-            res.header('Access-Control-Allow-Methods', 'GET');
+             redirectionRoute(req, res,"/api/acores/siteAcore/horaires/");
 
-            // Request headers you wish to allow
-            res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-            // verification que la requete contient bien les paramatres attendus
-            if ((req.params.id.length > 0 && req.params.id > 0) && (req.params.codeAcore.length > 0)) {
-                paramId = req.params.id;
-                getOnlyHoraire = true;
-                codeAcore = req.params.codeAcore;
-                start = new Date();
-                pathApi = '/api/acores/bureau_detail/' + codeAcore + '?id=' + paramId + '&session=' + apiKey;
-                DISFEObject = createDIFSEObject();
-                performResponse(res, 0, "");
-            }
         };
+
+
 
         
         if(debug){
@@ -304,7 +297,61 @@ var SampleApp = function()
     };
 
 
+     //**************************************************************************
+    // CG : 09-11-2014 Function de redirection de route
+    // Parametres { req : request/(request), res : result/(Num), route : nom de la route/(String) }
+    //**************************************************************************
 
+    function redirectionRoute(req, res, route){
+
+            res.header('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Methods', 'GET');
+            res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+            var isCodeAcoreValid = false;
+            var coderegatefromfile = null;
+            if(jsonrefregateFile != null){
+                if(jsonrefregateFile.hasOwnProperty(req.params.codeAcore)){
+                    isCodeAcoreValid = true;
+                    coderegatefromfile = jsonrefregateFile[req.params.codeAcore]; 
+                }else{
+                    winston.error("requete sur code acore inconnue : "+req.params.codeAcore);
+                }
+            }
+
+            if(isCodeAcoreValid){
+
+                 if ((req.params.id.length > 0 && req.params.id > 0)) {
+
+                        paramId = req.params.id;
+                        getOnlyHoraire = false;
+
+                        if(route == "/api/acores/siteAcore/horaires/"){
+                            console.log("get only horaire");
+                            getOnlyHoraire = true;
+                        }else{
+                            getOnlyHoraire = false;
+                        };
+
+                        codeAcore = req.params.codeAcore;
+                        start = new Date();
+                        pathApi = '/api/acores/bureau_detail/' + codeAcore + '?id=' + paramId + '&session=' + apiKey;
+                        DISFEObject = createDIFSEObject();
+                        if(isregatefromfile){
+                            DISFEObject.codeRegate = coderegatefromfile;
+                            console.log("code regete extrait "+coderegatefromfile+" continuer en phase 2");
+                            performResponse(res, 2, "");
+                        }else{
+                            performResponse(res, 0, "");
+                        }
+                    }
+
+            }else{
+                res.sendStatus(502);
+            }
+
+
+    }
 
     //**************************************************************************
     // CG : 09-11-2014 Function de changement de phase pour les 4 requetes
@@ -383,7 +430,7 @@ var SampleApp = function()
 
         setDataAcoreV2(response, data);
             if (!getOnlyHoraire) {
-                        response.send(JSON.stringify(DISFEObject));
+                        response.send(JSON.stringify(DISFEObject.horaires));
             } else {
                         response.send(JSON.stringify(DISFEObject));
             }
