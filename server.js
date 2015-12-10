@@ -48,20 +48,18 @@ var SampleApp = function()
     *  Initializes the sample application.
     */
     self.initialize = function() {
-        winston.add(winston.transports.File, { filename: 'debug.log' });
-        winston.remove(winston.transports.Console);
+        winston.add(winston.transports.File, { filename: 'debug.log',handleExceptions: false, humanReadableUnhandledException: true, maxsize: 5000000 ,maxFiles : 5 , zippedArchive :true });
 
         self.setupVariables();
         self.populateCache();
         self.setupTerminationHandlers();
-
 
         // Create the express server and routes.
         self.initializeServer();
 
     };
 
-        /**
+     /**
      *  Initialize the server (express) and create the routes and register
      *  the handlers.
      */
@@ -76,7 +74,6 @@ var SampleApp = function()
 
             var forwardedIpsStr = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
             if (forwardedIpsStr) {
-
                 if (accessFile != null) {
                     var obj = JSON.parse(accessFile);
                     var allowedIp = obj.Allow;
@@ -90,21 +87,16 @@ var SampleApp = function()
                             }
                         }
                         if (isAllowedDomain) {
-
                             next();
                         } else {
-                            winston.error('access forbidden', forwardedIpsStr);
+                            winston.info('ip client','access forbidden for ip :',forwardedIpsStr);
                             res.sendStatus(403);
-
-                            
                         }
                     } catch (Err) {
-                        winston.error('info', 'error access',Err);
+                        winston.error('error access :',JSON.stringify(Err, ["message", "arguments", "type", "name"]));
+
                     }
                 }
-
-
-
             }
         });
 
@@ -113,10 +105,6 @@ var SampleApp = function()
         }
        
     };
-
-
-  
-
 
 
     /**
@@ -129,7 +117,6 @@ var SampleApp = function()
         var fs = require('fs');
         fs.readFile(('access.json'), function(errorreadfile, datafile) {
             if (errorreadfile) {
-                //console.info(errorreadfile);
                 winston.error('debug','error reading access.json', errorreadfile);
             } else {
                 accessFile = datafile;
@@ -247,15 +234,12 @@ var SampleApp = function()
         self.routes['/api/acores/siteAcore/filtreGuichet/:codeAcore/:id'] = function(req, res) {
 
             res.header('Access-Control-Allow-Origin', '*');
-
-            // Request methods you wish to allow
             res.header('Access-Control-Allow-Methods', 'GET');
-
-            // Request headers you wish to allow
             res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
 
             // verification que la requete contient bien les paramatres attendus
             if ((req.params.id.length > 0 && req.params.id > 0) && (req.params.codeAcore.length > 0)) {
+                
                 paramId = req.params.id;
                 getOnlyHoraire = false;
                 codeAcore = req.params.codeAcore;
@@ -264,6 +248,8 @@ var SampleApp = function()
                 DISFEObject = createDIFSEObject();
                 performResponse(res, 0, "");
             }
+
+
         };
 
         self.routes['/api/acores/siteAcore/horaires/:codeAcore/:id'] = function(req, res) {
@@ -330,36 +316,78 @@ var SampleApp = function()
         switch (numPhase) {
             // Tentative de connexion Acore V1  
             case 0:
-               
-                pathApi = '/api/acores/bureau_detail/' + codeAcore + '?id=' + paramId + '&session=' + apiKey;
-                performRequest(response, numPhase);
+                authentificationAcoreV1(response,numPhase);
                 break;
                 // Tentative de récuperation Json Acore V1      
             case 1:
-                setDataAcoreV1(response, data);
-                apiKey = 'badae6cf02734ac34c50cb58d3877d39';
-                pathApi = '/api/acores/bureau_detail_v2/' + codeAcore + '?id=' + paramId + '&session=' + apiKey + '&use_http_status_code=0';
-                performRequest(response, numPhase + 1);
+                traitementRedirectionAcoreV1(response,data,numPhase);
                 break;
                 // Tentative de connexion Acore V2
             case 2:
-                pathApi = '/api/acores/bureau_detail_v2/' + codeAcore + '?id=' + paramId + '&session=' + apiKey + '&use_http_status_code=0';
-                performRequest(response, numPhase);
+                authentificationAcoreV2(response, numPhase);
                 break;
                 // Tentative de récuperation Json Acore V2
             case 3:
-                setDataAcoreV2(response, data);
-                if (!getOnlyHoraire) {
-                    response.send(JSON.stringify(DISFEObject));
-                } else {
-                    response.send(JSON.stringify(DISFEObject));
-                }
-                response.end();
-
-                var end = new Date() - start;
+                traitementRedirectionAcoreV2(response,data);
                 break;
         }
 
+
+    }
+
+    //**************************************************************************
+    // CG : 10-12-2015 Function d'authentification Acore v 1
+    // Parametre { response : response/(response), numPhase : numero de phase/(Int) }
+    //**************************************************************************
+
+    function authentificationAcoreV1(response,numPhase){
+
+      pathApi = '/api/acores/bureau_detail/' + codeAcore + '?id=' + paramId + '&session=' + apiKey;
+      performRequest(response, numPhase);
+
+    }
+
+    //**************************************************************************
+    // CG : 10-12-2015 Function de traitement de de redirection Acore v 2
+    // Parametre { response : response/(response), data : data/(JSON) }
+    //**************************************************************************
+
+    function traitementRedirectionAcoreV1(response,data,numPhase){
+
+         setDataAcoreV1(response, data);
+         apiKey = 'badae6cf02734ac34c50cb58d3877d39';
+         pathApi = '/api/acores/bureau_detail_v2/' + codeAcore + '?id=' + paramId + '&session=' + apiKey + '&use_http_status_code=0';
+         performRequest(response, numPhase + 1);
+
+    }
+
+
+    //**************************************************************************
+    // CG : 10-12-2015 Function d'authentification Acore v 2
+    // Parametre { response : response/(response), numPhase : numero de phase/(Int) }
+    //**************************************************************************
+
+    function authentificationAcoreV2(response,numPhase){
+
+      pathApi = '/api/acores/bureau_detail_v2/' + codeAcore + '?id=' + paramId + '&session=' + apiKey + '&use_http_status_code=0';
+      performRequest(response, numPhase);
+
+    }
+
+    //**************************************************************************
+    // CG : 10-12-2015 Function de traitement de de redirection Acore v 2
+    // Parametre { response : response/(response), data : data/(JSON) }
+    //**************************************************************************
+
+    function traitementRedirectionAcoreV2(response,data){
+
+        setDataAcoreV2(response, data);
+            if (!getOnlyHoraire) {
+                        response.send(JSON.stringify(DISFEObject));
+            } else {
+                        response.send(JSON.stringify(DISFEObject));
+            }
+        response.end();
 
     }
 
@@ -376,7 +404,8 @@ var SampleApp = function()
                 DISFEObject.codeRegate = obj.bureaux.codeRegate;
             }
         } catch (error) {
-             winston.error('debug', 'traitement Json Acore v1',  error);
+             winston.error('traitement Json Acore v1',JSON.stringify(error, ["message", "arguments", "type", "name"]));
+
             res.sendStatus(502);
            
             
@@ -435,7 +464,7 @@ var SampleApp = function()
 
 
         } catch (error) {
-            winston.error('traitement Json Acore v2', error);
+            winston.error('traitement Json Acore v2',JSON.stringify(error, ["message", "arguments", "type", "name"]));
             res.sendStatus(502);
         }
 
@@ -524,8 +553,6 @@ var SampleApp = function()
                         oneHoraire.codTypEtaAct = null;
                         oneHoraire.codSitTrfAct = null;
 
-
-
                     } else {
 
 
@@ -553,7 +580,7 @@ var SampleApp = function()
             return tabHoraireFormatted;
 
         } catch (error) {
-            winston.error('debug','traitement horaire Acore v2', error);
+            winston.error('traitement horaire Acore v2',JSON.stringify(error, ["message", "arguments", "type", "name"]));
             res.sendStatus(502);
             
         }
@@ -628,7 +655,7 @@ var SampleApp = function()
                             performResponse(res, (phase), stringBuffer);
 
                         } catch (error) {
-                            winston.error('debug','erreur en phase d authentification V1', error);
+                            winston.error('erreur en phase d authentification V1',JSON.stringify(error, ["message", "arguments", "type", "name"]));
                         }
 
                         // reception resultat de la requete sans erreur 
@@ -647,7 +674,7 @@ var SampleApp = function()
                                 performResponse(res, (phase + 1), stringBuffer);
                             }
                         } catch (error) {
-                            winston.error('debug','erreur en phase d authentification V2', error);
+                           winston.error('erreur en phase d authentification V2',JSON.stringify(error, ["message", "arguments", "type", "name"]));
                         }
 
                     }
@@ -660,7 +687,7 @@ var SampleApp = function()
 
         reqGet.end();
         reqGet.on('error', function(error) {
-            winston.error('info','getting requete', error);
+            winston.error('getting request',JSON.stringify(error, ["message", "arguments", "type", "name"]));
         });
 
     }
