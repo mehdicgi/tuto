@@ -26,6 +26,8 @@ var jsonrefregateFile = null;
 var DISFEObject = null;
 var start = new Date();
 var isregatefromfile = true;
+var sharedSecret = "argte6cf02734ac34c50cb58d3877d396552";
+var crypto = require("crypto");
 var apicache = require('apicache').options({
     debug: false
 }).middleware;
@@ -76,8 +78,14 @@ var SampleApp = function()
 
 
         self.app.use(function(req, res, next) {
+             var retrievedSignature, parsedUrl, computedSignature;
+            
+            res.header('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Methods', 'GET');
+            res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
 
             var forwardedIpsStr = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+            console.log("forwardedIpsStr : "+forwardedIpsStr);
             if (forwardedIpsStr) {
                 if (accessFile != null) {
                     var obj = JSON.parse(accessFile);
@@ -93,8 +101,28 @@ var SampleApp = function()
                         }
                         if (isAllowedDomain) {
 
+                            if (req.method === "OPTIONS") {
+                                res.setHeader("Access-Control-Allow-Headers", "X-Signature");
+                                res.writeHead(204);
+                                res.end();
+                            }else{
 
-                            next();
+                                retrievedSignature = req.headers["x-signature"];
+                                console.log("retrievedSignature : "+retrievedSignature);
+                                computedSignature = crypto.createHmac("sha256", sharedSecret).update(forwardedIpsStr).digest("hex");
+
+                                if (computedSignature === retrievedSignature) {
+                                     next(); 
+                                }else{
+                                    winston.info('Signature Client',' unkown ',forwardedIpsStr);
+                                    res.sendStatus(403);
+                                }
+
+                            }
+
+
+
+                          
                         } else {
                             winston.info('ip client','access forbidden for ip :',forwardedIpsStr);
                             res.sendStatus(403);
