@@ -8,7 +8,7 @@ var md5 = require('md5');
 var Keysession = "badae6cf02734ac34c50cb58d3877d39";
 var apiKey = "badae6cf02734ac34c50cb58d3877d39";
 var pathApi = "";
-var hostApi = 'webservice.laposte.fr';ap
+var hostApi = 'webservice.laposte.fr';
 /*************/
 /* cgi proxy */
 /*************/
