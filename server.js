@@ -18,7 +18,7 @@ var HttpProxyAgent = require('http-proxy-agent');
 var numPhase = 0;
 var paramId = 0;
 // caching time in second
-var cachingTime = "15 minutes";
+var cachingTime = "25 minutes";
 var codeAcore = "";
 var getOnlyHoraire = false;
 var accessFile = null;
