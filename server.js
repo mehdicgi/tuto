@@ -8,7 +8,7 @@ var md5 = require('md5');
 var Keysession = "badae6cf02734ac34c50cb58d3877d39";
 var apiKey = "badae6cf02734ac34c50cb58d3877d39";
 var pathApi = "";
-var hostApi = 'webservice.laposte.fr';
+var hostApi = 'webservice.laposte.fr';ap
 /*************/
 /* cgi proxy */
 /*************/
@@ -18,7 +18,7 @@ var HttpProxyAgent = require('http-proxy-agent');
 var numPhase = 0;
 var paramId = 0;
 // caching time in second
-var cachingTime = "2 minutes";
+var cachingTime = "10 minutes";
 var codeAcore = "";
 var getOnlyHoraire = false;
 var accessFile = null;
