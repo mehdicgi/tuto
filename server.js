@@ -111,7 +111,7 @@ var SampleApp = function()
                                 console.log("retrievedSignature : "+retrievedSignature);
                                 computedSignature = crypto.createHmac("sha256", sharedSecret).update(forwardedIpsStr).digest("hex");
                         // Pour  accèder sans passer par la sécurité ( TEST )
-                                if (computedSignature !== retrievedSignature) {
+                                if (computedSignature === retrievedSignature) {
                                      next(); 
                                 }else{
                                     winston.info('Signature Client',' unkown ',forwardedIpsStr);
